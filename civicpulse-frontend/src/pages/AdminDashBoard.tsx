@@ -104,7 +104,7 @@ const AdminDashboard: React.FC = () => {
     const [categoryChartData, setCategoryChartData] = useState<any[]>([]);
     const [trendChartData, setTrendChartData] = useState<any[]>([]);
     const [priorityChartData, setPriorityChartData] = useState<any[]>([]);
-    //Added on 17/01
+   
     const [slaChartData, setSlaChartData] = useState<any[]>([]); // <--- ADD THIS
     const [wardChartData, setWardChartData] = useState<any[]>([]); // <--- ADD THIS
 
@@ -187,7 +187,7 @@ const AdminDashboard: React.FC = () => {
             ];
             setPriorityChartData(pData.filter(d => d.value > 0));
 
-            ///Added on 17/01
+            
             // ✅ 4. SLA Compliance Data (NEW LOGIC)
             let metSla = 0;
             let breachedSla = 0;
