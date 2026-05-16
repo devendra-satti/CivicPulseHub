@@ -167,7 +167,7 @@ const ComplaintList: React.FC = () => {
             </div>
         </div>
     );
-
+    const FILE_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
     return (
         <div style={styles.container}>
             {/* CSS for animations */}
@@ -201,17 +201,22 @@ const ComplaintList: React.FC = () => {
                         <div key={c.id} style={styles.card}>
                             <div style={styles.imgContainer}>
                                 {c.imageUrl ? (
-                                    <img src={`http://localhost:8080/uploads/${c.imageUrl}`} alt="Problem" style={styles.imageHalf} title="Your Upload" onClick={() => setViewerImage(`http://localhost:8080/uploads/${c.imageUrl}`)}/>
+                                    <img 
+                                        src={`${FILE_BASE_URL}/uploads/${c.imageUrl}`} 
+                                        alt="Problem" 
+                                        style={styles.imageHalf} 
+                                        title="Your Upload" 
+                                        onClick={() => setViewerImage(`${FILE_BASE_URL}/uploads/${c.imageUrl}`)}
+                                    />
                                 ) : <div style={styles.noImage}>No Image</div>}
-                                
+                                                                
                                 {c.resolution_proof_url ? (
                                     <img 
-                                        src={`http://localhost:8080/uploads/${c.resolution_proof_url}`} 
+                                        src={`${FILE_BASE_URL}/uploads/${c.resolution_proof_url}`} 
                                         alt="Proof" 
                                         style={{...styles.imageHalf, borderLeft:'2px solid white'}} 
                                         title="Click to zoom"
-                                        // ✅ CHANGE: Set state for viewer
-                                        onClick={() => setViewerImage(`http://localhost:8080/uploads/${c.resolution_proof_url}`)}
+                                        onClick={() => setViewerImage(`${FILE_BASE_URL}/uploads/${c.resolution_proof_url}`)}
                                     />
                                 ) : (c.status === 'RESOLVED' && <div style={styles.noImage}>No Proof</div>)}
                             </div>

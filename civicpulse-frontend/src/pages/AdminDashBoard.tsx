@@ -361,7 +361,7 @@ const AdminDashboard: React.FC = () => {
     };
 
     const isActionable = currentStatus !== 'RESOLVED' && currentStatus !== 'REJECTED';
-
+    const FILE_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
     return (
         <div style={styles.container}>
             <div style={styles.header}>
@@ -597,20 +597,20 @@ const AdminDashboard: React.FC = () => {
                                                             <div title="Citizen's Complaint Image">
                                                                 {c.imageUrl ? (
                                                                     <img 
-                                                                        src={`http://localhost:8080/uploads/${c.imageUrl}`} 
+                                                                        src={`${FILE_BASE_URL}/uploads/${c.imageUrl}`} 
                                                                         alt="issue" 
                                                                         style={styles.thumb}
-                                                                        onClick={() => setViewerImage(`http://localhost:8080/uploads/${c.imageUrl}`)}
+                                                                        onClick={() => setViewerImage(`${FILE_BASE_URL}/uploads/${c.imageUrl}`)}
                                                                     />
                                                                 ) : <div style={{...styles.thumb, display:'flex', alignItems:'center', justifyContent:'center', background:'#f1f5f9', fontSize:'9px', color:'#ccc'}}>N/A</div>}
                                                             </div>
                                                             {c.resolution_proof_url && (
                                                                 <div title="Officer's Resolution Proof">
                                                                     <img 
-                                                                        src={`http://localhost:8080/uploads/${c.resolution_proof_url}`} 
+                                                                        src={`${FILE_BASE_URL}/uploads/${c.resolution_proof_url}`} 
                                                                         alt="proof" 
                                                                         style={{...styles.thumb, borderColor: '#22c55e', borderWidth: '2px'}} 
-                                                                        onClick={() => setViewerImage(`http://localhost:8080/uploads/${c.resolution_proof_url}`)}
+                                                                        onClick={() => setViewerImage(`${FILE_BASE_URL}/uploads/${c.resolution_proof_url}`)}
                                                                     />
                                                                 </div>
                                                             )}

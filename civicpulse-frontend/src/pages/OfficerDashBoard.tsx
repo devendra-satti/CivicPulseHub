@@ -253,7 +253,7 @@ const OfficerDashboard: React.FC = () => {
         input: { width: '100%', padding: '10px', background: '#f1f5f9', borderRadius: '8px', border: '1px solid #e2e8f0', marginTop: '10px', marginBottom: '10px', fontSize: '14px' },
         adminCommentBox: { marginTop: '15px', padding: '10px', background: '#fef2f2', borderLeft: '4px solid #ef4444', borderRadius: '4px', fontSize: '12px', color: '#7f1d1d' },
     };
-
+    const FILE_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
     return (
         <div style={styles.container}>
             <div style={styles.sidebar}>
@@ -324,7 +324,7 @@ const OfficerDashboard: React.FC = () => {
                                         <div key={task.id} style={styles.card}>
                                             <div style={styles.cardImg}>
                                                 {task.imageUrl ? (
-                                                    <img src={`http://localhost:8080/uploads/${task.imageUrl}`} style={{width:'100%', height:'100%', objectFit:'cover', cursor: 'zoom-in'}} alt="issue" onClick={() => setViewerImage(`http://localhost:8080/uploads/${task.imageUrl}`)} />
+                                                    <img src={`${FILE_BASE_URL}/uploads/${task.imageUrl}`} style={{width:'100%', height:'100%', objectFit:'cover', cursor: 'zoom-in'}} alt="issue" onClick={() => setViewerImage(`${FILE_BASE_URL}/uploads/${task.imageUrl}`)} />
                                                 ) : <div style={{height:'100%', display:'flex', alignItems:'center', justifyContent:'center', color:'#ccc'}}>No Image</div>}
                                             </div>
                                             <div style={styles.cardBody}>
