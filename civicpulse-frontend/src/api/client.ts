@@ -5,7 +5,7 @@ import axios from "axios";
 // Create a reusable axios instance
 const api = axios.create({
     // Use the cloud Render URL if available, otherwise fallback to local
-    baseURL: (import.meta.env.VITE_API_URL || "http://localhost:8080") + "/api",
+    baseURL: (import.meta.env.VITE_API_BASE_URL || "http://localhost:8080") + "/api",
     
     // Crucial for session cookies/credentials over cloud networks
     withCredentials: true 

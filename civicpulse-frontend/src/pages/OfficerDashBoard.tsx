@@ -253,7 +253,7 @@ const OfficerDashboard: React.FC = () => {
         input: { width: '100%', padding: '10px', background: '#f1f5f9', borderRadius: '8px', border: '1px solid #e2e8f0', marginTop: '10px', marginBottom: '10px', fontSize: '14px' },
         adminCommentBox: { marginTop: '15px', padding: '10px', background: '#fef2f2', borderLeft: '4px solid #ef4444', borderRadius: '4px', fontSize: '12px', color: '#7f1d1d' },
     };
-    const FILE_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+    const FILE_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
     return (
         <div style={styles.container}>
             <div style={styles.sidebar}>

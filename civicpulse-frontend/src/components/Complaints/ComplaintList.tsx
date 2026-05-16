@@ -167,7 +167,7 @@ const ComplaintList: React.FC = () => {
             </div>
         </div>
     );
-    const FILE_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+    const FILE_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
     return (
         <div style={styles.container}>
             {/* CSS for animations */}
