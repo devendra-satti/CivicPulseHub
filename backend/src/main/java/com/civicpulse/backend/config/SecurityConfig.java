@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
+import java.util.ArrayList; // Added for dynamic lists
+import org.springframework.beans.factory.annotation.Value; // Added to read environment variables
 import org.springframework.beans.factory.annotation.Autowired; //p2
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;//p2
 
@@ -22,6 +24,10 @@ public class SecurityConfig {
     //Phase-2
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter; // 1. Inject the Filter
+
+    // Reads FRONTEND_URL from Render env variables. Defaults to empty string if not found.
+    @Value("${FRONTEND_URL:}")
+    private String frontendUrl;
 
     //To verify whether the request have permission/not
     @Bean
@@ -54,13 +60,19 @@ public class SecurityConfig {
         //Defining the CORS rules
         CorsConfiguration config = new CorsConfiguration();
         // config.setAllowedOrigins(List.of("http://localhost:5173")); // URL of your React App
-
-        // ALLOW YOUR COMPUTER'S IP and the Mobile connection
-        config.setAllowedOrigins(List.of(
-            "http://localhost:3000",      // Desktop browser
-            "http://localhost:5173"    // Vite Desktop
+        
+        // Base allowed origins (Localhost environments)
+        List<String> allowedOrigins = new ArrayList<>(List.of(
+            "http://localhost:3000",      
+            "http://localhost:5173"    
         ));
 
+        // Dynamically add the production Netlify URL if it exists
+        if (frontendUrl != null && !frontendUrl.isBlank()) {
+            allowedOrigins.add(frontendUrl);
+        }
+
+        config.setAllowedOrigins(allowedOrigins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
