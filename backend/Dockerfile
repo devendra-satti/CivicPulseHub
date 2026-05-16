@@ -2,6 +2,10 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY . .
+
+# Fix the Linux permission issue explicitly
+RUN chmod +x ./mvnw
+
 RUN ./mvnw clean package -DskipTests
 
 # Step 2: Run the compiled JAR using Java JDK
