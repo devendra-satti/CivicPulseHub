@@ -34,6 +34,12 @@ public class AuthController {
     @Value("${app.jwt.secret}") //Reads jwt token value from application.properties
     private String jwtSecret;
 
+    // A simple endpoint just to wake up the server container
+    @GetMapping("/ping")
+    public ResponseEntity<String> pingServer() {
+        return ResponseEntity.ok("Server is wide awake!");
+    }
+    
     // --- NEW ENDPOINT: SEND OTP ---(PHASE 3)
     @PostMapping("/send-otp")
     public ResponseEntity<?> sendOtp(@RequestBody Map<String, String> request) {
