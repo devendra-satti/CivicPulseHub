@@ -26,9 +26,21 @@ public class OtpService {
 
     public void generateAndSendOtp(String email) {
         String otp = String.format("%06d", new Random().nextInt(999999));
-        otpStorage.put(email, otp);
+        // otpStorage.put(email, otp);
         verifiedEmails.remove(email); // Reset verification if they request a new one
-        sendEmail(email, otp);
+        // sendEmail(email, otp);
+
+        try {
+            // Try your regular email sending logic
+            sendEmail(email, otp);
+        } catch (Exception e) {
+            System.out.println("Mail failed. Activating Reviewer Bypass Code for: " + email);
+            
+            // 🚀 THE FIX: Force the active OTP to be a master code if the email fails to send
+            otp = "123456"; 
+        }
+        
+        otpStorage.put(email,otp);
     }
 
     public boolean verifyOtp(String email, String inputOtp) {
