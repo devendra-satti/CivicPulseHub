@@ -83,7 +83,7 @@ public class DataSeeder {
                 officer.setRole("OFFICER");
                 officer.setDepartment("roads");
                 officer.setTicketsResolved(1); // Populates tracking performance cards
-                officer.setTicketsReopened(1);
+                officer.setTicketsReopened(0);
                 officer.setEnabled(true);
                 officer = userRepository.save(officer);
                 System.out.println("✅ Officer Account Seeded: officer@civicpulse.com");
@@ -120,6 +120,7 @@ public class DataSeeder {
             String resolvedLocalStreetlightPath = downloadSampleImage("https://5.imimg.com/data5/SELLER/Default/2025/6/520764289/DE/WC/OL/33657206/led-street-light.jpg"
                 ,"resolvedLocalSteetlight_demo.jpg");
 
+            String localGarbageIssuePath = downloadSampleImage("https://thumbs.dreamstime.com/b/pile-garbage-plastic-black-trash-bag-waste-many-footpath-pollution-trash-plastic-waste-bag-foam-tray-garbage-119376415.jpg","local_garbage.jpg");
             // =================================================================
             // 3. SEED LIVE DUMMY COMPLAINTS (WAKES UP THE DASHBOARDS)
             // =================================================================
@@ -198,7 +199,7 @@ public class DataSeeder {
                 ticket3.setPriority("HIGH");
                 ticket3.setCreatedAt(new Date());
                 ticket3.setUpdatedAt(new Date());
-                ticket3.setImageUrl("https://lh3.googleusercontent.com/d/1-zBHbOLHi0OSUdSXR0k2_Fm7aBrthnPq");
+                ticket3.setImageUrl(localGarbageIssuePath);
                 complaintRepository.save(ticket3);
 
                 System.out.println("✅ Sample Dashboard Complaint Tickets Registered.");
