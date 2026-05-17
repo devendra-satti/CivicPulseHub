@@ -125,7 +125,7 @@ public class DataSeeder {
                 ticket1.setStatus("ASSIGNED");
                 ticket1.setPriority("HIGH");
                 ticket1.setAssignedAt(threeDaysAgo);
-                ticket1.setImageUrl("https://media.istockphoto.com/id/95658927/photo/a-large-pot-hole-filled-with-water-on-an-asphalt-road.jpg?s=612x612&w=0&k=20&c=o4V3HZV1HqlopqwJ7DsI8BuwD7k26UKthAZ_FSn8SrY=");
+                ticket1.setImageUrl("https://lh3.googleusercontent.com/d/1dJoYc9bB4VxaUxqItz4jAbnGspx7J8WH");
                 ticket1.setCreatedAt(fourDaysAgo); 
                 ticket1.setUpdatedAt(threeDaysAgo);
                 complaintRepository.save(ticket1);
@@ -154,8 +154,8 @@ public class DataSeeder {
                 ticket2.setMaterialsUsed("1 LED bulb array, 3 meters connection wire");
                 ticket2.setCitizen_feedback("Fast and efficient resolution! The street is much safer now.");
                 ticket2.setCitizen_rating(5);
-                ticket2.setImageUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwL5cSOiJ4QRfyTREKilkhi2AiZJAUuW9nmw&s");
-                ticket2.setResolution_proof_url("https://thumbs.dreamstime.com/b/street-scene-night-urban-town-light-trails-car-lights-63552704.jpg");
+                ticket2.setImageUrl("https://lh3.googleusercontent.com/d/1yaTAODbcbZx4fpNG3v3jmo65D-r8BG6Y");
+                ticket2.setResolution_proof_url("https://lh3.googleusercontent.com/d/156sAGn4uFnFLHeX7ng_so0qkRULfWHH0");
                 ticket2.setCreatedAt(infoSixDaysAgo);
                 ticket2.setUpdatedAt(oneDayAgo);
                 complaintRepository.save(ticket2);
@@ -173,7 +173,7 @@ public class DataSeeder {
                 ticket3.setPriority("HIGH");
                 ticket3.setCreatedAt(new Date());
                 ticket3.setUpdatedAt(new Date());
-                ticket3.setImageUrl("https://media.istockphoto.com/id/178415548/photo/garbage-and-seagulls.jpg?s=612x612&w=0&k=20&c=OfUZHxAbG2g00Du0emE8SI0re7o-pmL1R_KAjB_bQCU=");
+                ticket3.setImageUrl("https://lh3.googleusercontent.com/d/1-zBHbOLHi0OSUdSXR0k2_Fm7aBrthnPq");
                 complaintRepository.save(ticket3);
 
                 System.out.println("✅ Sample Dashboard Complaint Tickets Registered.");
