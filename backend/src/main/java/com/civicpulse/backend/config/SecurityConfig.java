@@ -33,14 +33,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for simple API use
+           .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/h2-console/**") // 🚀 1. Disable CSRF protection specifically for the H2 console paths
+                .disable() // Keeps it disabled for your regular API use
+            )
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Connect to Frontend(Third Block downside)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll() // Allow Login and Signup
                 .requestMatchers("/uploads/**").permitAll()  // <--- NEW: Allow access to images!
+                .requestMatchers("/h2-console/**").permitAll() // 🚀 2. Explicitly whitelist H2 Console endpoint requests
                 .requestMatchers("/api/admin/**").hasAuthority("ADMIN") // Only ADMIN role can access
                 .requestMatchers("/api/users/**").hasAnyAuthority("ADMIN", "OFFICER")
                 .anyRequest().authenticated() // Lock everything else(eg.DashBoard)
+            )
+
+            // 🚀 3. Allow frames from the SAME ORIGIN so the H2 console sidebar layout can render inside the browser
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.sameOrigin())
             )
 
             // 2. Add the Filter BEFORE the username/password check(Phase-2)
