@@ -217,7 +217,7 @@ const AdminDashboard: React.FC = () => {
                 };
             });
 
-            console.log("Computed Trend Chart Output Data Matrix:", trendData);
+            // console.log("Computed Trend Chart Output Data Matrix:", trendData);
             setTrendChartData(trendData);
 
             // 3. Priority Data
