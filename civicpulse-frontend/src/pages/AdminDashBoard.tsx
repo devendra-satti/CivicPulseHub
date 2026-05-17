@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import toast from 'react-hot-toast';
-import { getAllComplaints, getCategories } from '../api/complaint'; 
+import { getAllComplaints, getCategories,getUserComplaints } from '../api/complaint'; 
 import { api } from '../api/client';
 import NotificationBell from '../components/Common/NotificationBell';
 import ImageViewer from '../components/Common/ImageViewer';
@@ -359,7 +359,52 @@ const AdminDashboard: React.FC = () => {
         chartGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '20px', marginBottom: '40px' },
         chartTitle: { fontSize: '16px', fontWeight: 700, color: '#334155', marginBottom: '20px', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px' }
     };
+    const [enrichedCitizens, setEnrichedCitizens] = useState<any[]>([]);
+    const [isLoadingMetrics, setIsLoadingMetrics] = useState(true);
 
+    useEffect(() => {
+    const loadAllCitizenMetrics = async () => {
+        try {
+        setIsLoadingMetrics(true);
+        
+        // Map over every citizen and fetch their complaints records in parallel
+        const enrichedDataPromises = citizens.map(async (citizen: any) => {
+            try {
+            const data = await getUserComplaints(parseInt(citizen.id));
+            
+            const total = data.length;
+            const resolved = data.filter((comp: any) => comp.status === 'RESOLVED').length;
+            
+            // Calculate Rating metrics accurately
+            const ratedComplaints = data.filter((comp: any) => comp.citizen_rating && comp.citizen_rating > 0);
+            const totalStars = ratedComplaints.reduce((acc: number, curr: any) => acc + curr.citizen_rating, 0);
+            const avgRating = ratedComplaints.length ? (totalStars / ratedComplaints.length).toFixed(1) : 'N/A';
+
+            return {
+                ...citizen,
+                totalComplaints: total,
+                resolvedCount: resolved,
+                satisfaction: avgRating
+            };
+            } catch (err) {
+            console.error(`Error loading metrics for citizen ${citizen.id}:`, err);
+            return { ...citizen, totalComplaints: 0, resolvedCount: 0, satisfaction: 'N/A' };
+            }
+        });
+
+        const results = await Promise.all(enrichedDataPromises);
+        setEnrichedCitizens(results);
+        } catch (error) {
+        console.error("Error processing citizen metrics pipeline:", error);
+        } finally {
+        setIsLoadingMetrics(false);
+        }
+    };
+
+    if (citizens && citizens.length > 0) {
+        loadAllCitizenMetrics();
+    }
+    }, [citizens]);
     const isActionable = currentStatus !== 'RESOLVED' && currentStatus !== 'REJECTED';
     const FILE_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
     return (
@@ -745,26 +790,65 @@ const AdminDashboard: React.FC = () => {
                             )}
                             {userTypeTab === 'CITIZENS' && (
                                 <div style={{ backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', padding: '30px' }}>
-                                    <input type="text" placeholder="Search Citizens..." style={styles.searchInput} value={userSearch} onChange={e => setUserSearch(e.target.value)} />
+                                    <input 
+                                        type="text" 
+                                        placeholder="Search Citizens..." 
+                                        style={styles.searchInput} 
+                                        value={userSearch} 
+                                        onChange={e => setUserSearch(e.target.value)} 
+                                    />
                                     <table style={styles.table}>
                                         <thead style={styles.thead}>
-                                            <tr><th style={styles.th()}>Name</th><th style={styles.th()}>Email</th><th style={{...styles.th(), textAlign:'center'}}>Complaints Filed</th><th style={{...styles.th(), textAlign:'center'}}>Resolved</th><th style={{...styles.th(), textAlign:'center'}}>Avg Rating</th></tr>
+                                            <tr>
+                                                <th style={styles.th()}>Name</th>
+                                                <th style={styles.th()}>Email</th>
+                                                <th style={{...styles.th(), textAlign:'center'}}>Complaints Filed</th>
+                                                <th style={{...styles.th(), textAlign:'center'}}>Resolved</th>
+                                                <th style={{...styles.th(), textAlign:'center'}}>Avg Rating</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                            {citizens.filter(c => c.name.toLowerCase().includes(userSearch.toLowerCase())).map(c => (
-                                                <tr key={c.id} style={{borderBottom: '1px solid #f0f9ff'}}>
-                                                    <td style={styles.td}><strong>{c.name}</strong></td>
-                                                    <td style={{...styles.td, color: '#0288d1'}}>{c.email}</td>
-                                                    <td style={{...styles.td, textAlign:'center'}}><span style={{background:'#f1f5f9', padding:'4px 8px', borderRadius:'6px', fontWeight:700}}>{c.totalComplaints || 0}</span></td>
-                                                    <td style={{...styles.td, textAlign:'center'}}><span style={{color:'#22c55e', fontWeight:700}}>{c.resolvedCount || 0}</span></td>
-                                                    <td style={{...styles.td, textAlign:'center'}}>{c.satisfaction !== 'N/A' ? <span style={{color:'#eab308', fontWeight:700}}>{c.satisfaction} ★</span> : <span style={{color:'#ccc'}}>-</span>}</td>
+                                            {/* 🚀 [FROM SNIPPET 2]: This clean conditional block completely replaces your old loop */}
+                                            {isLoadingMetrics ? (
+                                                <tr>
+                                                    <td colSpan={5} style={{ textAlign: 'center', padding: '20px', color: '#64748b', fontWeight: '500' }}>
+                                                        ⏳ Fetching citizen analytics from backend...
+                                                    </td>
                                                 </tr>
-                                            ))}
+                                            ) : (
+                                                enrichedCitizens
+                                                    .filter(c => c.name.toLowerCase().includes(userSearch.toLowerCase()))
+                                                    .map(c => (
+                                                        <tr key={c.id} style={{borderBottom: '1px solid #e2e8f0'}}>
+                                                            <td style={styles.td}><strong>{c.name}</strong></td>
+                                                            <td style={{...styles.td, color: '#0099ff'}}>{c.email}</td>
+                                                            
+                                                            <td style={{...styles.td, textAlign:'center'}}>
+                                                                <span style={{background:'#f1f5f9', padding:'4px 8px', borderRadius:'6px', fontWeight:700, color: '#1e293b'}}>
+                                                                    {c.totalComplaints}
+                                                                </span>
+                                                            </td>
+                                                            
+                                                            <td style={{...styles.td, textAlign:'center'}}>
+                                                                <span style={{color:'#22c55e', fontWeight:700}}>
+                                                                    {c.resolvedCount}
+                                                                </span>
+                                                            </td>
+                                                            
+                                                            <td style={{...styles.td, textAlign:'center'}}>
+                                                                {c.satisfaction !== 'N/A' ? (
+                                                                    <span style={{color:'#f39c12', fontWeight:700}}>{c.satisfaction} ★</span>
+                                                                ) : (
+                                                                    <span style={{color:'#94a3b8'}}>-</span>
+                                                                )}
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>
-                            )}
-                        </>
+                            )}                       </>
                     )}
                 </>
             )}

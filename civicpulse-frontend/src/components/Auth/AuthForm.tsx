@@ -67,8 +67,10 @@
     },
     demoBadgeContainer: {
       position: 'relative' as const,
-      display: 'inline-block',
+      display: 'block',          // Changed from inline-block to take full width
+      textAlign: 'right' as const, // 🚀 Automatically forces the inner button to the right side
       marginBottom: '16px',
+      width: '100%',
     },
     demoButton: {
       padding: '6px 12px',
