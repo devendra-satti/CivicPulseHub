@@ -172,11 +172,30 @@ const AdminDashboard: React.FC = () => {
                 return d.toISOString().split('T')[0];
             }).reverse();
             
-            const trendData = last7Days.map(date => {
-                const count = complaintsData.filter((c: any) => (c.createdAt || '').startsWith(date)).length;
-                const resolved = complaintsData.filter((c: any) => (c.createdAt || '').startsWith(date) && c.status === 'RESOLVED').length;
-                return { date: new Date(date).toLocaleDateString('en-US', {weekday:'short'}), total: count, resolved: resolved };
+            const trendData = last7Days.map(dateStr => {
+                // 1. Format the calendar tracking date to 'YYYY-MM-DD'
+                const targetDate = new Date(dateStr).toISOString().split('T')[0];
+
+                const count = complaintsData.filter((c: any) => {
+                    if (!c.createdAt) return false;
+                    // 2. Safely parse and convert the backend timestamp to 'YYYY-MM-DD'
+                    const complaintDate = new Date(c.createdAt).toISOString().split('T')[0];
+                    return complaintDate === targetDate;
+                }).length;
+
+                const resolved = complaintsData.filter((c: any) => {
+                    if (!c.createdAt) return false;
+                    const complaintDate = new Date(c.createdAt).toISOString().split('T')[0];
+                    return complaintDate === targetDate && c.status === 'RESOLVED';
+                }).length;
+
+                return { 
+                    date: new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short' }), 
+                    total: count, 
+                    resolved: resolved 
+                };
             });
+
             setTrendChartData(trendData);
 
             // 3. Priority Data
