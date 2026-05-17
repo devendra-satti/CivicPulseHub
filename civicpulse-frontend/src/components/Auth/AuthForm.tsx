@@ -65,16 +65,19 @@
       lineHeight: '1.4',
       fontWeight: '500',
     },
+    demoCenterWrapper: {
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',  // 🚀 Aligns the button perfectly to the horizontal center
+      marginTop: '20px',         // 🚀 Change this value to adjust the spacing from Forgot Password
+    },
     demoBadgeContainer: {
       position: 'relative' as const,
-      display: 'block',          // Changed from inline-block to take full width
-      textAlign: 'right' as const, // 🚀 Automatically forces the inner button to the right side
-      marginBottom: '16px',
-      width: '100%',
+      display: 'inline-block',
     },
     demoButton: {
       padding: '6px 12px',
-      backgroundColor: 'rgba(0, 153, 255, 0.1)',
+      backgroundColor: 'rgba(0, 153, 255, 0.06)',
       color: '#0099ff',
       border: '1px dashed #0099ff',
       borderRadius: '20px',
@@ -88,19 +91,20 @@
     },
     demoTooltip: {
       position: 'absolute' as const,
-      top: '110%',
-      left: '0',
+      top: '115%',               // Sits neatly below the centered button
+      left: '50%',
+      transform: 'translateX(-50%)', // 🚀 Centers the dropdown tooltip relative to the button
       backgroundColor: '#ffffff',
       border: '1px solid #e2e8f0',
       borderRadius: '8px',
       padding: '14px',
-      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
       zIndex: 1500,
       width: '280px',
       display: 'flex',
       flexDirection: 'column' as const,
       gap: '8px',
-      animation: 'fadeIn 0.15s ease-out',
+      textAlign: 'left' as const, // Keeps the inner account text left-aligned inside the tooltip
     },
     tooltipTitle: {
       margin: 0,
@@ -553,38 +557,40 @@
           </form>
         </div>
         {/* // JSX Placement: */}
-        <div 
-          style={styles.demoBadgeContainer}
-          onMouseEnter={() => setShowDemoTooltip(true)}
-          onMouseLeave={() => setShowDemoTooltip(false)}
-        >
-          <button type="button" style={styles.demoButton}>
-            💡 Quick Demo Accounts
-          </button>
+        <div style={styles.demoCenterWrapper}>
+          <div 
+            style={styles.demoBadgeContainer}
+            onMouseEnter={() => setShowDemoTooltip(true)}
+            onMouseLeave={() => setShowDemoTooltip(false)}
+          >
+            <button type="button" style={styles.demoButton}>
+              💡 Quick Demo Accounts
+            </button>
 
-          {showDemoTooltip && (
-            <div style={styles.demoTooltip}>
-              <h4 style={styles.tooltipTitle}>Evaluation Credentials</h4>
-              <div style={styles.tooltipDivider} />
-              
-              <div style={styles.accountRow}>
-                <span style={styles.roleTagAdmin}>ADMIN</span>
-                <code style={styles.codeText}>admin@civicpulse.com</code>
+            {showDemoTooltip && (
+              <div style={styles.demoTooltip}>
+                <h4 style={styles.tooltipTitle}>Evaluation Credentials</h4>
+                <div style={styles.tooltipDivider} />
+                
+                <div style={styles.accountRow}>
+                  <span style={styles.roleTagAdmin}>ADMIN</span>
+                  <code style={styles.codeText}>admin@civicpulse.com</code>
+                </div>
+                <div style={styles.accountRow}>
+                  <span style={styles.roleTagOfficer}>OFFICER</span>
+                  <code style={styles.codeText}>officer@civicpulse.com</code>
+                </div>
+                <div style={styles.accountRow}>
+                  <span style={styles.roleTagCitizen}>CITIZEN</span>
+                  <code style={styles.codeText}>citizen@civicpulse.com</code>
+                </div>
+                
+                <div style={styles.tooltipFooter}>
+                  🔑 Password for all: <code style={styles.codeText}>test1234</code>
+                </div>
               </div>
-              <div style={styles.accountRow}>
-                <span style={styles.roleTagOfficer}>OFFICER</span>
-                <code style={styles.codeText}>officer@civicpulse.com</code>
-              </div>
-              <div style={styles.accountRow}>
-                <span style={styles.roleTagCitizen}>CITIZEN</span>
-                <code style={styles.codeText}>citizen@civicpulse.com</code>
-              </div>
-              
-              <div style={styles.tooltipFooter}>
-                🔑 Password for all: <code style={styles.codeText}>test1234</code>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
         {/* --- FLOATING TOAST NOTIFICATIONS LAYER --- */}
         {otpSuccess && (
