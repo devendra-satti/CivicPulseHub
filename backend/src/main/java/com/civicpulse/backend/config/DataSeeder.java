@@ -74,7 +74,7 @@ public class DataSeeder {
                 officer.setPassword(sharedPassword);
                 officer.setRole("OFFICER");
                 officer.setDepartment("roads");
-                officer.setTicketsResolved(14); // Populates tracking performance cards
+                officer.setTicketsResolved(1); // Populates tracking performance cards
                 officer.setTicketsReopened(1);
                 officer.setEnabled(true);
                 officer = userRepository.save(officer);
@@ -145,8 +145,9 @@ public class DataSeeder {
                 ticket2.setAssignedTo(officer.getId());
                 ticket2.setTitle("Broken Streetlight on Lane 4");
                 ticket2.setDescription("The street lamp post has been completely non-functional for over a week, making the residential road dark.");
-                ticket1.setLatitude(16.8292);
-                ticket1.setLongitude(81.5335);
+                ticket2.setLocation("Main Market Entry Gate");
+                ticket2.setLatitude(16.8292);
+                ticket2.setLongitude(81.5335);
                 ticket2.setStatus("RESOLVED");
                 ticket2.setPriority("MEDIUM");
                 ticket2.setAdmin_comment("Replaced the default bulb fixture with a new LED assembly panel.");
@@ -166,8 +167,8 @@ public class DataSeeder {
                 ticket3.setTitle("Overflowing Garbage Bin near Market");
                 ticket3.setDescription("Garbage collection container is overflowing, spreading waste onto the pedestrian walkway.");
                 ticket3.setLocation("Main Market Entry Gate");
-                ticket1.setLatitude(16.8292);
-                ticket1.setLongitude(81.5335);
+                ticket3.setLatitude(16.8292);
+                ticket3.setLongitude(81.5335);
                 ticket3.setStatus("PENDING");
                 ticket3.setPriority("HIGH");
                 ticket3.setCreatedAt(new Date());
