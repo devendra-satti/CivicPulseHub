@@ -60,7 +60,7 @@ public class Complaint {
     private String citizen_feedback;
     private Integer citizen_rating;
 
-    @Column(name = "created_at", insertable = false, updatable = false)
+    @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt = new Date(); // Defaults to "now" for normal production use, but allows overrides during seeding!;
 
