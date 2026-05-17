@@ -390,40 +390,6 @@
 
     return (
       <div className="auth-box">
-        {/* // JSX Placement: */}
-        <div 
-          style={styles.demoBadgeContainer}
-          onMouseEnter={() => setShowDemoTooltip(true)}
-          onMouseLeave={() => setShowDemoTooltip(false)}
-        >
-          <button type="button" style={styles.demoButton}>
-            💡 Quick Demo Accounts
-          </button>
-
-          {showDemoTooltip && (
-            <div style={styles.demoTooltip}>
-              <h4 style={styles.tooltipTitle}>Evaluation Credentials</h4>
-              <div style={styles.tooltipDivider} />
-              
-              <div style={styles.accountRow}>
-                <span style={styles.roleTagAdmin}>ADMIN</span>
-                <code style={styles.codeText}>admin@civicpulse.com</code>
-              </div>
-              <div style={styles.accountRow}>
-                <span style={styles.roleTagOfficer}>OFFICER</span>
-                <code style={styles.codeText}>officer@civicpulse.com</code>
-              </div>
-              <div style={styles.accountRow}>
-                <span style={styles.roleTagCitizen}>CITIZEN</span>
-                <code style={styles.codeText}>citizen@civicpulse.com</code>
-              </div>
-              
-              <div style={styles.tooltipFooter}>
-                🔑 Password for all: <code style={styles.codeText}>test1234</code>
-              </div>
-            </div>
-          )}
-        </div>
         {/* TABS */}
         {!isForgotMode ? (
           <div className="auth-tabs">
@@ -585,6 +551,40 @@
                 </p>
             )}
           </form>
+        </div>
+        {/* // JSX Placement: */}
+        <div 
+          style={styles.demoBadgeContainer}
+          onMouseEnter={() => setShowDemoTooltip(true)}
+          onMouseLeave={() => setShowDemoTooltip(false)}
+        >
+          <button type="button" style={styles.demoButton}>
+            💡 Quick Demo Accounts
+          </button>
+
+          {showDemoTooltip && (
+            <div style={styles.demoTooltip}>
+              <h4 style={styles.tooltipTitle}>Evaluation Credentials</h4>
+              <div style={styles.tooltipDivider} />
+              
+              <div style={styles.accountRow}>
+                <span style={styles.roleTagAdmin}>ADMIN</span>
+                <code style={styles.codeText}>admin@civicpulse.com</code>
+              </div>
+              <div style={styles.accountRow}>
+                <span style={styles.roleTagOfficer}>OFFICER</span>
+                <code style={styles.codeText}>officer@civicpulse.com</code>
+              </div>
+              <div style={styles.accountRow}>
+                <span style={styles.roleTagCitizen}>CITIZEN</span>
+                <code style={styles.codeText}>citizen@civicpulse.com</code>
+              </div>
+              
+              <div style={styles.tooltipFooter}>
+                🔑 Password for all: <code style={styles.codeText}>test1234</code>
+              </div>
+            </div>
+          )}
         </div>
         {/* --- FLOATING TOAST NOTIFICATIONS LAYER --- */}
         {otpSuccess && (
