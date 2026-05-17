@@ -490,8 +490,8 @@ const AdminDashboard: React.FC = () => {
                                 {/* 2. Trend Analysis */}
                                 <div style={styles.chartCard}>
                                     <div style={styles.chartTitle}>7-Day Filing Trend</div>
-                                    <div style={{width:'100%', height: 300}}>
-                                        <ResponsiveContainer>
+                                    <div style={{width:'100%', height: 300, minWidth: 0, position: 'relative'}}>
+                                        <ResponsiveContainer width="100%" height="100%">
                                             <AreaChart data={trendChartData}>
                                                 <defs>
                                                     <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
