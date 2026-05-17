@@ -64,6 +64,97 @@
       color: '#1e293b', // Dark graphite text for excellent readability on a white background
       lineHeight: '1.4',
       fontWeight: '500',
+    },
+    demoBadgeContainer: {
+      position: 'relative' as const,
+      display: 'inline-block',
+      marginBottom: '16px',
+    },
+    demoButton: {
+      padding: '6px 12px',
+      backgroundColor: 'rgba(0, 153, 255, 0.1)',
+      color: '#0099ff',
+      border: '1px dashed #0099ff',
+      borderRadius: '20px',
+      fontSize: '12px',
+      fontWeight: '600',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '4px',
+      transition: 'all 0.2s ease',
+    },
+    demoTooltip: {
+      position: 'absolute' as const,
+      top: '110%',
+      left: '0',
+      backgroundColor: '#ffffff',
+      border: '1px solid #e2e8f0',
+      borderRadius: '8px',
+      padding: '14px',
+      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+      zIndex: 1500,
+      width: '280px',
+      display: 'flex',
+      flexDirection: 'column' as const,
+      gap: '8px',
+      animation: 'fadeIn 0.15s ease-out',
+    },
+    tooltipTitle: {
+      margin: 0,
+      fontSize: '13px',
+      fontWeight: '600',
+      color: '#1e293b',
+    },
+    tooltipDivider: {
+      height: '1px',
+      backgroundColor: '#e2e8f0',
+      margin: '2px 0',
+    },
+    accountRow: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: '8px',
+    },
+    roleTagAdmin: {
+      fontSize: '10px',
+      fontWeight: '700',
+      padding: '2px 6px',
+      backgroundColor: '#fee2e2',
+      color: '#dc2626',
+      borderRadius: '4px',
+    },
+    roleTagOfficer: {
+      fontSize: '10px',
+      fontWeight: '700',
+      padding: '2px 6px',
+      backgroundColor: '#fef3c7',
+      color: '#d97706',
+      borderRadius: '4px',
+    },
+    roleTagCitizen: {
+      fontSize: '10px',
+      fontWeight: '700',
+      padding: '2px 6px',
+      backgroundColor: '#dbeafe',
+      color: '#2563eb',
+      borderRadius: '4px',
+    },
+    codeText: {
+      fontFamily: 'monospace',
+      fontSize: '12px',
+      color: '#334155',
+      backgroundColor: '#f8fafc',
+      padding: '2px 4px',
+      borderRadius: '4px',
+    },
+    tooltipFooter: {
+      marginTop: '4px',
+      fontSize: '11px',
+      color: '#64748b',
+      borderTop: '1px dashed #e2e8f0',
+      paddingTop: '8px',
     }
   };
   //18/12
@@ -293,9 +384,44 @@
     // Helper to determine what error/success to show (Merges Hook state + Local state)
     const displayError = formError || otpError;
     const displaySuccess = formSuccess || otpSuccess;
+    const [showDemoTooltip, setShowDemoTooltip] = useState(false);
 
     return (
       <div className="auth-box">
+        {/* // JSX Placement: */}
+        <div 
+          style={styles.demoBadgeContainer}
+          onMouseEnter={() => setShowDemoTooltip(true)}
+          onMouseLeave={() => setShowDemoTooltip(false)}
+        >
+          <button type="button" style={styles.demoButton}>
+            💡 Quick Demo Accounts
+          </button>
+
+          {showDemoTooltip && (
+            <div style={styles.demoTooltip}>
+              <h4 style={styles.tooltipTitle}>Evaluation Credentials</h4>
+              <div style={styles.tooltipDivider} />
+              
+              <div style={styles.accountRow}>
+                <span style={styles.roleTagAdmin}>ADMIN</span>
+                <code style={styles.codeText}>admin@civicpulse.com</code>
+              </div>
+              <div style={styles.accountRow}>
+                <span style={styles.roleTagOfficer}>OFFICER</span>
+                <code style={styles.codeText}>officer@civicpulse.com</code>
+              </div>
+              <div style={styles.accountRow}>
+                <span style={styles.roleTagCitizen}>CITIZEN</span>
+                <code style={styles.codeText}>citizen@civicpulse.com</code>
+              </div>
+              
+              <div style={styles.tooltipFooter}>
+                🔑 Password for all: <code style={styles.codeText}>test1234</code>
+              </div>
+            </div>
+          )}
+        </div>
         {/* TABS */}
         {!isForgotMode ? (
           <div className="auth-tabs">

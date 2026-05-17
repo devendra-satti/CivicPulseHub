@@ -62,7 +62,7 @@ public class Complaint {
 
     @Column(name = "created_at", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private Date createdAt = new Date(); // Defaults to "now" for normal production use, but allows overrides during seeding!;
 
     // --- NEW FIELD: SLA Tracking ---
     // This tracks WHEN the officer was assigned, to calculate the 24hr deadline
