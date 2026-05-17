@@ -172,30 +172,52 @@ const AdminDashboard: React.FC = () => {
                 return d.toISOString().split('T')[0];
             }).reverse();
             
+            console.log("=== CHART SYSTEM DIAGNOSTICS ===");
+            console.log("Raw last7Days Array:", last7Days);
+            if (complaintsData.length > 0) {
+                console.log("Example Backend complaint.createdAt sample:", complaintsData[0].createdAt);
+            }
+
             const trendData = last7Days.map(dateStr => {
-                // 1. Format the calendar tracking date to 'YYYY-MM-DD'
-                const targetDate = new Date(dateStr).toISOString().split('T')[0];
+                // Standardize your calendar loop date string
+                const d = new Date(dateStr);
+                const targetYear = d.getFullYear();
+                const targetMonth = d.getMonth();
+                const targetDate = d.getDate();
 
                 const count = complaintsData.filter((c: any) => {
                     if (!c.createdAt) return false;
-                    // 2. Safely parse and convert the backend timestamp to 'YYYY-MM-DD'
-                    const complaintDate = new Date(c.createdAt).toISOString().split('T')[0];
-                    return complaintDate === targetDate;
+                    
+                    // Handle both string ISO timestamps and raw Unix epoch numbers safely
+                    const compDate = new Date(c.createdAt);
+                    
+                    // Verify if year, month, and day match perfectly regardless of strings
+                    return compDate.getFullYear() === targetYear &&
+                        compDate.getMonth() === targetMonth &&
+                        compDate.getDate() === targetDate;
                 }).length;
 
                 const resolved = complaintsData.filter((c: any) => {
                     if (!c.createdAt) return false;
-                    const complaintDate = new Date(c.createdAt).toISOString().split('T')[0];
-                    return complaintDate === targetDate && c.status === 'RESOLVED';
+                    const compDate = new Date(c.createdAt);
+                    
+                    return compDate.getFullYear() === targetYear &&
+                        compDate.getMonth() === targetMonth &&
+                        compDate.getDate() === targetDate && 
+                        c.status === 'RESOLVED';
                 }).length;
 
+                // Format X-Axis Label (e.g., "Mon", "Tue")
+                const dayLabel = d.toLocaleDateString('en-US', { weekday: 'short' });
+
                 return { 
-                    date: new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short' }), 
+                    date: dayLabel, 
                     total: count, 
                     resolved: resolved 
                 };
             });
 
+            console.log("Computed Trend Chart Output Data Matrix:", trendData);
             setTrendChartData(trendData);
 
             // 3. Priority Data
