@@ -15,51 +15,51 @@ export const useOtp = () => {
     // Ref to prevent double-firing in Strict Mode
     const verificationInProgress = useRef(false);
 
-    // Function 1: Send OTP
-    // const sendOtpHandler = async (email: string, type: 'SIGNUP' | 'RESET') => {
-    //     setOtpError('');
-    //     setOtpSuccess('');
-    //     setIsVerifyingEmail(true);
-    //     try {
-    //         await sendOtp(email.trim(), type); // <--- Added trim() for safety
-    //         setIsOtpSent(true);
-    //         setOtpSuccess("OTP sent! Check your inbox.");
-    //         setTimeout(() => setOtpSuccess(''), 3000);
-    //     } catch (err: any) {
-    //         setOtpError(err.message || "Failed to send OTP.");
-    //     } finally {
-    //         setIsVerifyingEmail(false);
-    //     }
-    // };
-
-    // Optimized Function 1: Send OTP (Non-Blocking & Interviewer Friendly)
-    const sendOtpHandler = (email: string, type: 'SIGNUP' | 'RESET') => {
-        const cleanEmail = email.trim();
-        
-        // 1. Reset feedback states immediately
+    //Function 1: Send OTP
+    const sendOtpHandler = async (email: string, type: 'SIGNUP' | 'RESET') => {
         setOtpError('');
-        
-        // 2. Set loading status and show intermediate toast text instantly
+        setOtpSuccess('');
         setIsVerifyingEmail(true);
-        setOtpSuccess(`Requesting code for ${cleanEmail}...`); 
-        setIsOtpSent(true); // Open the OTP input box instantly so the system never feels laggy
-
-        // 3. Fire the API promise in the background (No 'await' blocking the main code execution thread)
-        sendOtp(cleanEmail, type)
-            .then(() => {
-                // Backend finished successfully (or responded fast)
-                setOtpSuccess("Code generated! For review purposes, use master code: 123456");
-            })
-            .catch((err: any) => {
-                console.warn("Handled infrastructure SMTP restriction:", err.message);
-                // 🚀 THE FALLBACK OVERRIDE: If Render drops the connection or errors out,
-                // tell the interviewer to use the backdoor master code!
-                setOtpSuccess("Demo Mode Active: Please enter verification code: 123456");
-            })
-            .finally(() => {
-                setIsVerifyingEmail(false);
-            });
+        try {
+            await sendOtp(email.trim(), type); // <--- Added trim() for safety
+            setIsOtpSent(true);
+            setOtpSuccess("OTP sent! Check your inbox.");
+            setTimeout(() => setOtpSuccess(''), 3000);
+        } catch (err: any) {
+            setOtpError(err.message || "Failed to send OTP.");
+        } finally {
+            setIsVerifyingEmail(false);
+        }
     };
+
+    // // Optimized Function 1: Send OTP (Non-Blocking & Interviewer Friendly)
+    // const sendOtpHandler = (email: string, type: 'SIGNUP' | 'RESET') => {
+    //     const cleanEmail = email.trim();
+        
+    //     // 1. Reset feedback states immediately
+    //     setOtpError('');
+        
+    //     // 2. Set loading status and show intermediate toast text instantly
+    //     setIsVerifyingEmail(true);
+    //     setOtpSuccess(`Requesting code for ${cleanEmail}...`); 
+    //     setIsOtpSent(true); // Open the OTP input box instantly so the system never feels laggy
+
+    //     // 3. Fire the API promise in the background (No 'await' blocking the main code execution thread)
+    //     sendOtp(cleanEmail, type)
+    //         .then(() => {
+    //             // Backend finished successfully (or responded fast)
+    //             setOtpSuccess("Code generated! For review purposes, use master code: 123456");
+    //         })
+    //         .catch((err: any) => {
+    //             console.warn("Handled infrastructure SMTP restriction:", err.message);
+    //             // 🚀 THE FALLBACK OVERRIDE: If Render drops the connection or errors out,
+    //             // tell the interviewer to use the backdoor master code!
+    //             setOtpSuccess("Demo Mode Active: Please enter verification code: 123456");
+    //         })
+    //         .finally(() => {
+    //             setIsVerifyingEmail(false);
+    //         });
+    // };
 
     // Function 2: Verify OTP
     const verifyOtpHandler = async (email: string, otp: string) => {

@@ -59,13 +59,19 @@ public class OtpService {
         verifiedEmails.remove(email);
     }
 
-    // 🚀 NEW: Clean, High-Speed Brevo REST HTTP Delivery Client Channel
+    // 🚀 FIXED: Corrected Brevo REST HTTP Delivery Client Channel
     private void sendEmailViaBrevo(String toEmail, String otp) {
+        // Validation check before starting the thread
+        if (brevoApiKey == null || brevoApiKey.trim().isEmpty()) {
+            System.err.println("CRITICAL: BREVO_API_KEY environment variable is missing or null!");
+            return;
+        }
+
         new Thread(() -> {
             try {
                 HttpClient client = HttpClient.newHttpClient();
                 
-                // Formulated JSON request mapping matching your verified corporate sender
+                // Formulated JSON request mapping matching your verified sender
                 String jsonPayload = "{"
                     + "\"sender\":{\"name\":\"CivicPulse Hub\",\"email\":\"civicpulse.official@gmail.com\"},"
                     + "\"to\":[{\"email\":\"" + toEmail + "\"}],"
@@ -79,7 +85,7 @@ public class OtpService {
                     + "}";
 
                 HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://api.api-brevo.com/v3/smtp/email")) // Brevo v3 Transactional URL endpoint
+                    .uri(URI.create("https://api.brevo.com/v3/smtp/email")) // 🚀 FIXED: Corrected Brevo URL endpoint
                     .header("accept", "application/json")
                     .header("api-key", brevoApiKey)
                     .header("content-type", "application/json")
@@ -91,13 +97,14 @@ public class OtpService {
                 if (response.statusCode() == 201 || response.statusCode() == 200) {
                     System.out.println("Real dynamic OTP successfully pushed via Brevo API to: " + toEmail);
                 } else {
-                    System.err.println("Brevo System Rejected Transmission: " + response.body());
+                    System.err.println("Brevo System Rejected Transmission. Status Code: " + response.statusCode() + " - Response: " + response.body());
                 }
 
             } catch (Exception e) {
-                System.err.println("Critical Exception in Background Email Delivery Stream: " + e.getMessage());
+                System.err.println("Critical Exception in Background Email Delivery Stream:");
+                e.printStackTrace(); // 🚀 FIXED: Prints the exact line number and root cause instead of 'null'
             }
-        }).start(); // Instantly breaks away from main container execution thread so React gets immediate 200 OK
+        }).start(); 
     }
 
     // Optional: Clean up memory every hour
