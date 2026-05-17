@@ -12,7 +12,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
+import java.io.File;
+import java.net.URL;
+import java.nio.file.Path;
+
 
 @Configuration
 public class DataSeeder {
@@ -94,6 +102,23 @@ public class DataSeeder {
                 citizen = userRepository.save(citizen);
                 System.out.println("✅ Citizen Account Seeded: citizen@civicpulse.com");
             }
+            
+            // =================================================================
+            // 3. DOWNLOAD & SEED PHYSICAL IMAGES TO THE UPLOADS FOLDER
+            // =================================================================
+            // We download clean unblocked public placeholder images on startup
+            String localPotholePath = downloadSampleImage(
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRr8prHacnG8QN-M9H9TiHESKEmzknqkb90GA&s", 
+                "pothole_demo.jpg"
+            );
+            
+            String localStreetlightPath = downloadSampleImage(
+                "https://assets.telegraphindia.com/telegraph/23RanRMCLight3_192419.jpg", 
+                "streetlight_demo.jpg"
+            );
+
+            String resolvedLocalStreetlightPath = downloadSampleImage("https://5.imimg.com/data5/SELLER/Default/2025/6/520764289/DE/WC/OL/33657206/led-street-light.jpg"
+                ,"resolvedLocalSteetlight_demo.jpg");
 
             // =================================================================
             // 3. SEED LIVE DUMMY COMPLAINTS (WAKES UP THE DASHBOARDS)
@@ -125,7 +150,7 @@ public class DataSeeder {
                 ticket1.setStatus("ASSIGNED");
                 ticket1.setPriority("HIGH");
                 ticket1.setAssignedAt(threeDaysAgo);
-                ticket1.setImageUrl("https://lh3.googleusercontent.com/d/1dJoYc9bB4VxaUxqItz4jAbnGspx7J8WH");
+                ticket1.setImageUrl(localPotholePath);
                 ticket1.setCreatedAt(fourDaysAgo); 
                 ticket1.setUpdatedAt(threeDaysAgo);
                 complaintRepository.save(ticket1);
@@ -154,8 +179,8 @@ public class DataSeeder {
                 ticket2.setMaterialsUsed("1 LED bulb array, 3 meters connection wire");
                 ticket2.setCitizen_feedback("Fast and efficient resolution! The street is much safer now.");
                 ticket2.setCitizen_rating(5);
-                ticket2.setImageUrl("https://lh3.googleusercontent.com/d/1yaTAODbcbZx4fpNG3v3jmo65D-r8BG6Y");
-                ticket2.setResolution_proof_url("https://lh3.googleusercontent.com/d/156sAGn4uFnFLHeX7ng_so0qkRULfWHH0");
+                ticket2.setImageUrl(localStreetlightPath);
+                ticket2.setResolution_proof_url(resolvedLocalStreetlightPath);
                 ticket2.setCreatedAt(infoSixDaysAgo);
                 ticket2.setUpdatedAt(oneDayAgo);
                 complaintRepository.save(ticket2);
@@ -179,6 +204,37 @@ public class DataSeeder {
                 System.out.println("✅ Sample Dashboard Complaint Tickets Registered.");
             }
         };
+    }
+    /**
+     * Helper method to download a file from a URL and save it to the local uploads directory.
+     * Returns the relative web route path: "/uploads/filename.jpg"
+     */
+    private String downloadSampleImage(String sourceUrl, String destinationFileName) {
+        try {
+            String directoryPath = "uploads";
+            File directory = new File(directoryPath);
+            
+            // Ensure folder exists on disk layout
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            Path targetPath = Paths.get(directoryPath).resolve(destinationFileName);
+            
+            // Only download if the file isn't already sitting in the folder
+            if (!Files.exists(targetPath)) {
+                URL url = new URL(sourceUrl);
+                try (InputStream in = url.openStream()) {
+                    Files.copy(in, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                    System.out.println("⬇️ Downloaded static asset layout dependency: " + destinationFileName);
+                }
+            }
+            
+            return  destinationFileName;
+        } catch (Exception e) {
+            System.err.println("❌ Could not pre-seed local file: " + destinationFileName + " - " + e.getMessage());
+            return null;
+        }
     }
 }
 
