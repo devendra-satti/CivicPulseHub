@@ -172,11 +172,11 @@ const AdminDashboard: React.FC = () => {
                 return d.toISOString().split('T')[0];
             }).reverse();
             
-            console.log("=== CHART SYSTEM DIAGNOSTICS ===");
-            console.log("Raw last7Days Array:", last7Days);
-            if (complaintsData.length > 0) {
-                console.log("Example Backend complaint.createdAt sample:", complaintsData[0].createdAt);
-            }
+            // console.log("=== CHART SYSTEM DIAGNOSTICS ===");
+            // console.log("Raw last7Days Array:", last7Days);
+            // if (complaintsData.length > 0) {
+            //     console.log("Example Backend complaint.createdAt sample:", complaintsData[0].createdAt);
+            // }
 
             const trendData = last7Days.map(dateStr => {
                 // Standardize your calendar loop date string
