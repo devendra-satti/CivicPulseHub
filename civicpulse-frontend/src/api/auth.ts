@@ -38,6 +38,7 @@ export async function sendOtp(email: string, type: 'SIGNUP' | 'RESET'): Promise<
   try {
     // Send both email AND type to the backend
     const { data } = await api.post("/auth/send-otp", { email, type });
+   
     return data;
   } catch (err: any) {
     if (err.response && err.response.data && err.response.data.message) {

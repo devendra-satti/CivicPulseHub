@@ -4,11 +4,85 @@ import { useAuth } from '../../auth/AuthContext';
 import { signin, signup, resetPassword } from '../../api/auth';
 import { useOtp } from '../../hooks/useOtp'; // <--- IMPORT THE HOOK
 import type { SigninRequest, SignupRequest } from '../../types/auth';
+import type { CSSProperties } from 'react';
 
 //18/12
 interface AuthFormProps {
   view: 'login' | 'signup'; // New prop to control the mode
 }
+const styles : { [key: string]: CSSProperties } = {
+    // ... your existing styles ...
+    modalOverlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        backdropFilter: 'blur(5px)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000,
+    },
+    modalContainer: {
+        backgroundColor: '#1e1e24', // Modern dark container background
+        border: '1px solid #333',
+        borderRadius: '12px',
+        padding: '24px',
+        maxWidth: '450px',
+        width: '90%',
+        boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+        color: '#fff',
+    },
+    modalHeader: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        marginBottom: '14px',
+    },
+    modalIcon: {
+        fontSize: '20px',
+    },
+    modalTitle: {
+        margin: 0,
+        fontSize: '18px',
+        fontWeight: '600',
+        color: '#f39c12', // Striking warning/info yellow accent
+    },
+    modalText: {
+        fontSize: '14px',
+        color: '#ccc',
+        lineHeight: '1.5',
+        margin: '0 0 16px 0',
+    },
+    modalNotice: {
+        margin: '0 0 20px 0',
+        padding: '12px',
+        backgroundColor: 'rgba(243, 156, 18, 0.1)',
+        borderLeft: '4px solid #f39c12',
+        fontSize: '13px',
+        color: '#ddd',
+        lineHeight: '1.4',
+        borderRadius: '0 8px 8px 0',
+    },
+    modalButton: {
+        width: '100%',
+        padding: '10px',
+        backgroundColor: '#f39c12',
+        color: '#000',
+        border: 'none',
+        borderRadius: '6px',
+        fontWeight: '600',
+        cursor: 'pointer',
+        transition: 'background 0.2s',
+    },
+    modalActions: {
+        marginTop: '20px',
+        display: 'flex',
+        justifyContent: 'center',
+    }
+};
 
 const AuthForm: React.FC<AuthFormProps> = ({view}) => {
   // --- 1. HOOKS ---
@@ -114,7 +188,13 @@ const AuthForm: React.FC<AuthFormProps> = ({view}) => {
     
     // Delegate to Hook
     const type = isForgotMode ? 'RESET' : 'SIGNUP';
-    await sendOtpHandler(formData.email, type);
+    try{
+      await sendOtpHandler(formData.email, type);
+      setDemoEmail(formData.email); // Save email for display in modal
+      setShowDemoModal(true); // 🚀 Open the professional popup!
+    }catch(e){
+       console.error("OTP Error:", e);
+    }
   };
 
   // const switchMode = (mode: 'LOGIN' | 'SIGNUP' | 'FORGOT') => {
@@ -229,6 +309,9 @@ const AuthForm: React.FC<AuthFormProps> = ({view}) => {
   const displayError = formError || otpError;
   const displaySuccess = formSuccess || otpSuccess;
 
+  //Added to display otp on screen to avoid SMTP mail issues in render
+  const [showDemoModal, setShowDemoModal] = useState(false);
+  const [demoEmail, setDemoEmail] = useState("");
   return (
     <div className="auth-box">
       {/* TABS */}
@@ -393,6 +476,30 @@ const AuthForm: React.FC<AuthFormProps> = ({view}) => {
           )}
         </form>
       </div>
+        {showDemoModal && (
+            <div style={styles.modalOverlay}>
+                <div style={styles.modalContainer}>
+                    <div style={styles.modalHeader}>
+                        <span style={styles.modalIcon}>⚙️</span>
+                        <h3 style={styles.modalTitle}>Deployment Demo Mode active</h3>
+                    </div>
+                    <p style={styles.modalText}>
+                        An OTP request for <strong>{demoEmail}</strong> reached the live Spring Boot server successfully.
+                    </p>
+                    <blockquote style={styles.modalNotice}>
+                        <strong>Note :</strong> Because free cloud environments restrict outgoing email ports (587/465) to block spam, the generated OTP has been securely printed directly to the <strong>Render Backend Live Logs</strong>.
+                    </blockquote>
+                    <div style={styles.modalActions}>
+                        <button 
+                            onClick={() => setShowDemoModal(false)} 
+                            style={styles.modalButton}
+                        >
+                            Proceed to Verify
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
     </div>
   );
 };
